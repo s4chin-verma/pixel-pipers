@@ -6,7 +6,7 @@ const App: React.FC = () => {
   return (
     <>
       <Header />
-      <main className="px-60">
+      <main className="2xl:px-60">
         <Outlet />
       </main>
       <Footer />
