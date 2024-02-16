@@ -1,14 +1,15 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 import { Home, NotFound } from '@/pages';
-import { Header } from './container';
+import { Header, Footer } from './container';
 
 const App: React.FC = () => {
   return (
     <>
       <Header />
-      <main>
+      <main className="px-60">
         <Outlet />
       </main>
+      <Footer />
     </>
   );
 };
