@@ -1,4 +1,4 @@
-import { User, NavLinkType } from './section';
+import { User, NavLinkType, RegisterValue } from './section';
 
 export const DARK_MODE = 'DARK_MODE';
 export interface LoginInput {
@@ -28,4 +28,8 @@ export interface ChatSideBarProps {
 
 export interface NavbarSectionType {
   navLinks: NavLinkType[];
+}
+
+export interface RegisterSection {
+  registerValue: RegisterValue[];
 }

@@ -10,7 +10,7 @@ const Header: React.FC = () => {
   const windowWidth = useWindowWidth();
 
   return (
-    <div className="fixed inset-x-0 top-0 right-0 z-50 ">
+    <header className="fixed inset-x-0 top-0 right-0 z-50 ">
       <div className="w-full antialiased text-gray-700 bg-gray-100 shadow-md">
         <div className="flex flex-col max-w-screen-xl px-4 mx-auto md:items-center md:justify-between md:flex-row md:px-6 lg:px-8">
           <div className="flex flex-row items-center justify-between p-4">
@@ -39,7 +39,7 @@ const Header: React.FC = () => {
           )}
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 

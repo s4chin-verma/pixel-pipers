@@ -1,13 +1,13 @@
-import { Pricing, CarouselComponent } from '@/container';
-import { ImageUploader } from '@/container';
+import { Footer, Pricing, CarouselComponent } from '@/container';
 
 const Home: React.FC = () => {
   return (
     <>
-      <CarouselComponent />
-
-      <ImageUploader />
-      <Pricing />
+      <main>
+        <CarouselComponent />
+        <Pricing />
+      </main>
+      <Footer />
     </>
   );
 };

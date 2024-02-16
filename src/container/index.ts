@@ -2,6 +2,6 @@ import Header from './layout/Header';
 import Pricing from './Pricing';
 import Footer from './layout/Footer';
 import CarouselComponent from './Carousel';
-import ImageUploader from './ImageUploader';
+import PayPage from './PaymentPage';
 
-export { Header, Pricing, Footer, CarouselComponent, ImageUploader };
+export { Header, Pricing, Footer, CarouselComponent, PayPage };
