@@ -1,32 +1,23 @@
 import { Icon } from '@iconify/react';
 import { FormButton, FormInput } from '@/components';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { registerSection } from '@/lib/contents/register';
-
-type Inputs = {
-  username: string;
-  password: string;
-};
+import { RegisterInput } from '@/lib/types';
+import { registerValidator, showToast } from '@/lib/validators';
+import { useAppDispatch } from '@/app/hooks';
+import { registerUser } from '@/app/actions/authActions';
 
 const Login: React.FC = () => {
-  const { register, handleSubmit } = useForm<Inputs>();
-  const navigate = useNavigate();
-  const { registerValue } = registerSection;
+  const { register, handleSubmit } = useForm<RegisterInput>();
 
-  const onSubmit: SubmitHandler<Inputs> = async data => {
-    try {
-      const response = await axios.post('https://pixelpipers.serveo.net/api/token/', {
-        username: data.username,
-        password: data.password,
-      });
-      console.log('Login successful:', response);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      navigate('/');
-    }
+  const { registerValue } = registerSection;
+  const dispatch = useAppDispatch();
+  const onSubmit: SubmitHandler<RegisterInput> = async data => {
+    console.log(data)
+    const { status, error } = registerValidator(data);
+    if (status === true) dispatch(registerUser(data));
+    else showToast(error, 'warning');
   };
 
   return (
@@ -62,7 +53,6 @@ const Login: React.FC = () => {
               />
             ))}
 
-           
             <FormButton icon="ri:login-circle-line" children="Register" />
           </form>
         </div>

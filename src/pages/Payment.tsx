@@ -1,58 +1,90 @@
+import logo from '@/assets/react.svg';
+import axios from 'axios';
 
-import React from 'react';
+interface RazorpayResponse {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+}
 
-interface PaymentButtonProps {}
-
-const PaymentButton: React.FC<PaymentButtonProps> = () => {
-  const handleClick = () => {
-    // Create options object as per Razorpay documentation
-    const options = {
-      key: 'rzp_test_4IKoZ3Gyi4heeK',
-      amount: '50000',
-      currency: 'INR',
-      name: 'Acme Corp',
-      description: 'Test Transaction',
-      image: 'https://example.com/your_logo',
-      order_id: 'order_NbhEIFMpU4yUKt',
-      handler: (response: any) => {
-        alert(response.razorpay_payment_id);
-        alert(response.razorpay_order_id);
-        alert(response.razorpay_signature);
-      },
-      prefill: {
-        name: 'Gaurav Kumar',
-        email: 'gaurav.kumar@example.com',
-        contact: '9000090000',
-      },
-      notes: {
-        address: 'Razorpay Corporate Office',
-      },
-      theme: {
-        color: '#3399cc',
-      },
-    };
-
-    // Create a new instance of Razorpay
-    const rzp1 = new (window as any).Razorpay(options);
-
-    rzp1.on('payment.failed', function (response: any) {
-      alert(response.error.code);
-      alert(response.error.description);
-      alert(response.error.source);
-      alert(response.error.step);
-      alert(response.error.reason);
-      alert(response.error.metadata.order_id);
-      alert(response.error.metadata.payment_id);
+const Payment = (): JSX.Element => {
+  const loadScript = async (src: string): Promise<boolean> => {
+    return new Promise(resolve => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
     });
+  };
 
-    rzp1.open();
+  const displayRazorpay = async (): Promise<void> => {
+    await loadScript('https://checkout.razorpay.com/v1/checkout.js');
+
+    try {
+      const result = await axios.post<{ final_price: number; id: string; callback_url: string }>(
+        // 'http://localhost:5000/payment/orders'
+        'https://pixelpipers.serveo.net/api/payment/',
+        { user: 1 }
+      );
+      console.log(result.data);
+
+      const { id: order_id, final_price, callback_url } = result.data;
+      let amount = final_price * 100;
+      let am = amount.toString();
+      const options = {
+        key: 'rzp_test_4IKoZ3Gyi4heeK',
+        amount: am,
+        currency: 'INR',
+        name: 'Pixel Pipers',
+        description: 'Test Transaction',
+        image: 'sachin',
+        order_id: order_id,
+        callback_url: callback_url,
+        handler: async (response: RazorpayResponse) => {
+          const data = {
+            orderCreationId: order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+          };
+
+          const result = await axios.post('https://pixelpipers.serveo.net/api/hadlereques/', data);
+          console.log(result);
+        },
+        prefill: {
+          name: 'Sachin Verma',
+          email: 'shivamvarma346@gmail.com',
+          contact: '6387975718',
+        },
+        notes: {
+          address: 'ARYA College of Engineering & I.T.',
+        },
+        theme: {
+          color: '#61dafb',
+        },
+      };
+
+      const paymentObject = new (window as any).Razorpay(options);
+      paymentObject.open();
+    } catch (error) {
+      console.error('Error in fetching or processing payment:', error);
+    }
   };
 
   return (
-    <button id="rzp-button1" onClick={handleClick}>
-      Pay
-    </button>
+    <>
+      <img src={logo} className="App-logo" alt="logo" />
+      <p>Buy React now!</p>
+      <button className="p-8 bg-slate-400" onClick={displayRazorpay}>
+        Pay ₹500
+      </button>
+    </>
   );
 };
 
-export default PaymentButton;
+export default Payment;

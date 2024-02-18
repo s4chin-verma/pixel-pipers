@@ -1,9 +1,19 @@
-export const registerValidator = (values: any): { status: boolean; error: string } => {
-  const { username, email, password, confirmPassword } = values;
+import { RegisterInput } from '../types';
+
+export const registerValidator = (values: RegisterInput): { status: boolean; error: string } => {
+  const { first_name, last_name, username, email, password, confirmPassword } = values;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const commonPasswords = ['12345678', 'password', 'qwerty', '111111'];
 
-  if (email.trim() === '' || username.trim() === '' || password.trim() === '') {
+  if (
+    email.trim() === '' ||
+    username.trim() === '' ||
+    password.trim() === '' ||
+    first_name.trim() === '' ||
+    last_name.trim() === '' ||
+    confirmPassword === undefined ||
+    confirmPassword.trim() === ''
+  ) {
     return { status: false, error: 'Please enter Required Field' };
   }
 

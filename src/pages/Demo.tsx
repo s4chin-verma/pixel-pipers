@@ -3,6 +3,7 @@ import { Icon } from '@iconify/react';
 
 const Demo: React.FC = () => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  console.log(previewImage);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
@@ -47,7 +48,9 @@ const Demo: React.FC = () => {
 
   return (
     <div className="p-8 flex flex-col justify-center items-center min-h-screen bg-white">
-      <h1 className='mb-8 text-4xl font-bold tracking-tight text-gray-600 sm:text-5xl'>Upload Your Image</h1>
+      <h1 className="mb-8 text-4xl font-bold tracking-tight text-gray-600 sm:text-5xl">
+        Upload Your Image
+      </h1>
       <div className="w-full md:w-1/2 h-full relative border border-gray-300 bg-gray-100 rounded-lg">
         <div
           className="relative order-first md:order-last h-96 md:h-96 flex justify-center items-center border border-dashed border-gray-400 m-2 rounded-lg bg-no-repeat bg-center bg-origin-padding bg-cover"
@@ -62,7 +65,7 @@ const Demo: React.FC = () => {
           ) : (
             <div className="text-gray-400 opacity-75 flex flex-col justify-center items-center gap-4">
               <Icon icon={'ph:image-square-thin'} className="h-16 w-16" />
-              <span className='flex items-center gap-4'>
+              <span className="flex items-center gap-4">
                 <Icon icon={'cil:cloud-upload'} className="h-8 w-8" />
                 <h3>Drop You image here</h3>
               </span>

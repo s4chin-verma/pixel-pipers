@@ -1,29 +1,26 @@
-import { User, NavLinkType, RegisterValue } from './section';
+import { User, NavLinkType, RegisterValue, Token } from './section';
 
-export const DARK_MODE = 'DARK_MODE';
 export interface LoginInput {
   username: string;
   password: string;
 }
 
 export interface RegisterInput {
+  first_name: string;
+  last_name: string;
   username: string;
   email: string;
   password: string;
   confirmPassword: string;
   picture: string | null;
 }
-export interface ResetPassInput {
+export interface RegisterUserPayload {
+  first_name: string;
+  last_name: string;
+  username: string;
   email: string;
-}
-
-export interface ChangePassInput {
   password: string;
-  confirmPassword: string;
-}
-
-export interface ChatSideBarProps {
-  users: User[];
+  picture: string | null;
 }
 
 export interface NavbarSectionType {
@@ -32,4 +29,12 @@ export interface NavbarSectionType {
 
 export interface RegisterSection {
   registerValue: RegisterValue[];
+}
+
+export interface AuthState {
+  loading: boolean;
+  userInfo: User | null;
+  tokens: Token | null;
+  error: string | null;
+  success: boolean;
 }

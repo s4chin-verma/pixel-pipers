@@ -1,31 +1,23 @@
 import { Icon } from '@iconify/react';
 import { FormButton, FormInput } from '@/components';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
-type Inputs = {
-  username: string;
-  password: string;
-};
+import { Link } from 'react-router-dom';
+import { LoginInput } from '@/lib/types';
+import { useAppDispatch } from '@/app/hooks';
+import { LoginValidator, showToast } from '@/lib/validators';
+import { userLogin } from '@/app/actions/authActions';
 
 const Login: React.FC = () => {
-  const { register, handleSubmit } = useForm<Inputs>();
-  const navigate = useNavigate();
+  const { register, handleSubmit } = useForm<LoginInput>();
+  const dispatch = useAppDispatch();
 
-  const onSubmit: SubmitHandler<Inputs> = async data => {
-    try {
-      const response = await axios.post('https://pixelpipers.serveo.net/api/token/', {
-        username: data.username,
-        password: data.password,
-      });
-      console.log('Login successful:', response);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      navigate('/');
-    }
+  const onSubmit: SubmitHandler<LoginInput> = async data => {
+    const { status, error } = LoginValidator(data);
+    if (status === true) dispatch(userLogin(data));
+    else showToast(error, 'warning');
   };
+  console.log(JSON.stringify(import.meta.env.BASE_URL));
+  console.log(import.meta.env.VITE_APP_TITLE); 
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-300 p-6">
