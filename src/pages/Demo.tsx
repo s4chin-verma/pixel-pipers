@@ -2,9 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { CloudinaryUploadWidget, Counter, Loader } from '@/components';
 import { Cloudinary } from '@cloudinary/url-gen/index';
 import { Icon } from '@iconify/react';
-// import { AdvancedImage, responsive, placeholder } from '@cloudinary/react';
-import { useAppSelector } from '@/app/hooks';
+import { AdvancedImage, responsive, placeholder } from '@cloudinary/react';
+import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { useDemoApiMutation } from '@/app/api/demoApi';
+import { showToast } from '@/lib/validators';
+import { setResultImageUrl } from '@/app/slices/demoSlice';
 
 const Demo: React.FC = () => {
   const [value, setValue] = useState<number>(0.6);
@@ -13,7 +15,9 @@ const Demo: React.FC = () => {
   const [uploadPreset] = useState<string>(import.meta.env.VITE_UPLOAD_PRESET);
   const { baseImageUrl } = useAppSelector(state => state.demo);
   const infoDivRef = useRef<HTMLDivElement>(null);
-  const [demo, { isLoading, data }] = useDemoApiMutation({ fixedCacheKey: 'myCacheKey' });
+  const dispatch = useAppDispatch();
+  const [demoApi, { isLoading, data }] = useDemoApiMutation({ fixedCacheKey: 'myCacheKey' });
+  const confidence_threshold = value.toString();
 
   const [uwConfig] = useState<any>({
     cloudName,
@@ -29,6 +33,19 @@ const Demo: React.FC = () => {
       cloudName,
     },
   });
+
+  const sendRequest = async () => {
+    try {
+      if (baseImageUrl) {
+        showToast('Request Sended to server', 'info');
+        const response = await demoApi({ image_path: baseImageUrl, confidence_threshold }).unwrap();
+        showToast('Object Counted Successful', 'success');
+        dispatch(setResultImageUrl(response?.image_url));
+      } else showToast('Please upload a image', 'warning');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     if (!isLoading && infoDivRef.current) {
@@ -49,13 +66,13 @@ const Demo: React.FC = () => {
               <h1 className="text-center text-2xl py-2 font-bold">Test Image</h1>
               <div className="relative order-first md:order-last h-80 md:h-96 flex justify-center items-center border border-dashed border-gray-400 m-2 rounded-lg bg-no-repeat bg-center bg-origin-padding bg-cover">
                 {baseImageUrl ? (
-                  // <AdvancedImage
-                  //   style={{ maxWidth: '100%' }}
-                  //   className="h-96"
-                  //   cldImg={myImage}
-                  //   plugins={[responsive(), placeholder()]}
-                  // />
-                  <img src={baseImageUrl} alt="baseImage" />
+                  <AdvancedImage
+                    style={{ maxWidth: '100%' }}
+                    className="h-80"
+                    cldImg={myImage}
+                    plugins={[responsive(), placeholder()]}
+                  />
+                  // <img src={baseImageUrl} alt="baseImage" />
                 ) : (
                   <div className="text-gray-400 opacity-75 flex flex-col justify-center items-center gap-4">
                     <Icon icon={'ph:image-square-thin'} className="h-16 w-16" />
@@ -66,7 +83,11 @@ const Demo: React.FC = () => {
             </div>
           </div>
           <div className="w-full rounded-b-lg p-2 md:p-4 bg-gray-200 flex flex-col md:flex-row justify-center md:justify-evenly items-center gap-6 md:gap-24 ">
-            <CloudinaryUploadWidget uwConfig={uwConfig} setPublicId={setPublicId} value={value} />
+            <CloudinaryUploadWidget
+              uwConfig={uwConfig}
+              setPublicId={setPublicId}
+              sendRequest={sendRequest}
+            />
             <Counter value={value} setValue={setValue} />
           </div>
         </div>
@@ -80,7 +101,7 @@ const Demo: React.FC = () => {
               <div className="text-gray-400 opacity-75 flex flex-col justify-center items-center gap-4">
                 {/* <Icon icon={'ph:image-square-thin'} className="h-16 w-16" />
                 <span>The Result will Appear here</span> */}
-                <img src={data.image_url} alt="image" className="h-96" />
+                <img src={data.image_url} alt="image" className="h-80" />
               </div>
             </div>
             {/* {resultImageUrl && (

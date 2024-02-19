@@ -1,23 +1,18 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { useDemoApiMutation } from '@/app/api/demoApi';
-import { setBaseImageUrl, setResultImageUrl } from '@/app/slices/demoSlice';
+import { setBaseImageUrl } from '@/app/slices/demoSlice';
 import { useAppDispatch } from '@/app/hooks';
-import { showToast } from '@/lib/validators';
 
 const CloudinaryScriptContext = createContext<{ loaded: boolean }>({
   loaded: false,
 });
 
 const CloudinaryUploadWidget: React.FC<{
-  value: number;
+  sendRequest: () => void;
   uwConfig: any;
   setPublicId: React.Dispatch<React.SetStateAction<string>>;
-}> = ({ uwConfig, setPublicId, value }) => {
+}> = ({ uwConfig, setPublicId, sendRequest }) => {
   const dispatch = useAppDispatch();
   const [loaded, setLoaded] = useState<boolean>(false);
-  const [demoApi] = useDemoApiMutation({ fixedCacheKey: 'myCacheKey' });
-  const [image_path, seImage_Path] = useState('');
-  const confidence_threshold = value.toString();
 
   useEffect(() => {
     if (!loaded) {
@@ -35,19 +30,6 @@ const CloudinaryUploadWidget: React.FC<{
     }
   }, []);
 
-  const sendRequest = async () => {
-    try {
-      if (image_path) {
-        showToast('Request Sended to server', 'info');
-        const response = await demoApi({ image_path, confidence_threshold }).unwrap();
-        showToast('Object Counted Successful', 'success');
-        dispatch(setResultImageUrl(response?.image_url));
-      } else showToast('Please upload a image', 'warning');
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const initializeCloudinaryWidget = async () => {
     try {
       if (loaded) {
@@ -56,7 +38,6 @@ const CloudinaryUploadWidget: React.FC<{
           (error: any, result: any) => {
             if (!error && result && result.event === 'success') {
               dispatch(setBaseImageUrl(result.info.url));
-              seImage_Path(result.info.url);
               setPublicId(result.info.public_id);
             }
           }
