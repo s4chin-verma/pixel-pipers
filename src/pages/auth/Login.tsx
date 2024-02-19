@@ -13,11 +13,8 @@ const Login: React.FC = () => {
 
   const onSubmit: SubmitHandler<LoginInput> = async data => {
     const { status, error } = LoginValidator(data);
-    if (status === true) dispatch(userLogin(data));
-    else showToast(error, 'warning');
+    status === true ? dispatch(userLogin(data)) : showToast(error, 'warning');
   };
-  console.log(JSON.stringify(import.meta.env.BASE_URL));
-  console.log(import.meta.env.VITE_APP_TITLE); 
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-300 p-6">

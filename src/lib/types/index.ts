@@ -38,3 +38,8 @@ export interface AuthState {
   error: string | null;
   success: boolean;
 }
+
+export interface DemoState {
+  baseImageUrl: string | null;
+  resultImageUrl: string | null;
+}

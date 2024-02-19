@@ -14,10 +14,9 @@ const MlModelCard: React.FC = () => {
               leading travel and tour company dedicated to creating exceptional journeys for
               adventurers, explorers, and wanderers like you.
             </p>
-            <MlModelBtn children="Buy Now" />
-
-            <MlModelBtn children="Add to Cart" />
-          
+            <MlModelBtn children="Buy Now" icon='devicon-plain:docker'/>
+            <MlModelBtn children="Add to Cart" icon='ion:cart-outline'/>
+            <MlModelBtn children="See More Details" icon='ph:info-thin'/>
           </div>
           <div className="hidden lg:mt-0 lg:col-span-5 lg:flex rounded-lg">
             <img

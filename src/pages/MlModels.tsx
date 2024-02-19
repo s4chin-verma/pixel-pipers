@@ -1,13 +1,13 @@
-import { useGetModelsQuery } from '@/app/api/mlModelsApi';
-import { MlModels } from '@/lib/types/section';
+// import { useGetModelsQuery } from '@/app/api/mlModelsApi';
+// import { MlModels } from '@/lib/types/section';
 import { MlModelCard } from '@/components';
 
 const MlModal: React.FC = () => {
-  const { data, isLoading } = useGetModelsQuery();
+  // const { data, isLoading } = useGetModelsQuery();
 
-  if (isLoading) {
-    return <div className="mt-96">Loading...</div>;
-  }
+  // if (isLoading) {
+  //   return <div className="mt-96">Loading...</div>;
+  // }
 
   return (
     <>

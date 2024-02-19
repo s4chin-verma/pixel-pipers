@@ -1,100 +1,88 @@
 import React, { useState } from 'react';
+import { CloudinaryUploadWidget, Counter } from '@/components';
+import { Cloudinary } from '@cloudinary/url-gen';
 import { Icon } from '@iconify/react';
+import { AdvancedImage, responsive, placeholder } from '@cloudinary/react';
+import { useAppSelector } from '@/app/hooks';
 
 const Demo: React.FC = () => {
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
-  console.log(previewImage);
+  const [value, setValue] = useState<number>(0);
+  const [publicId, setPublicId] = useState<string>('');
+  const [cloudName] = useState<string>(import.meta.env.VITE_CLOUD_NAME);
+  const [uploadPreset] = useState<string>(import.meta.env.VITE_UPLOAD_PRESET);
+  const { baseImageUrl } = useAppSelector(state => state.demo);
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files && event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result === 'string') {
-          setPreviewImage(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  const [uwConfig] = useState<any>({
+    cloudName,
+    uploadPreset,
+    // cropping: true,
+    showAdvancedOptions: false,
+    multiple: false,
+    folder: 'ml-models',
+    theme: 'white',
+  });
 
-  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (event.dataTransfer.items) {
-      for (let i = 0; i < event.dataTransfer.items.length; i++) {
-        if (event.dataTransfer.items[i].kind === 'file') {
-          const file = event.dataTransfer.items[i].getAsFile();
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-              if (typeof reader.result === 'string') {
-                setPreviewImage(reader.result);
-              }
-            };
-            reader.readAsDataURL(file);
-          }
-          break;
-        }
-      }
-    }
-  };
+  const cld = new Cloudinary({
+    cloud: {
+      cloudName,
+    },
+  });
 
-  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    event.dataTransfer.dropEffect = 'copy';
-  };
+  const myImage = cld.image(publicId);
+  console.log(myImage);
 
   return (
-    <div className="p-8 flex flex-col justify-center items-center min-h-screen bg-white">
-      <h1 className="mb-8 text-4xl font-bold tracking-tight text-gray-600 sm:text-5xl">
-        Upload Your Image
-      </h1>
-      <div className="w-full md:w-1/2 h-full relative border border-gray-300 bg-gray-100 rounded-lg">
-        <div
-          className="relative order-first md:order-last h-96 md:h-96 flex justify-center items-center border border-dashed border-gray-400 m-2 rounded-lg bg-no-repeat bg-center bg-origin-padding bg-cover"
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}>
-          {previewImage ? (
-            <img
-              src={previewImage}
-              alt="Preview image"
-              className="h-[23rem] rounded-lg overflow-hidden"
-            />
-          ) : (
+    <section className="w-full py-24 md:py-32 px-8  md:px-36">
+      <div className="flex flex-col justify-center items-center min-h-screen bg-white">
+        <h1 className="mb-12 text-3xl font-bold tracking-tight text-gray-600 sm:text-5xl">
+          Upload Your Image
+        </h1>
+        <div className="w-full md:w-3/4  h-full relative border border-gray-300 bg-gray-100 rounded-lg">
+          <div className="md:flex">
+            <div className="w-full h-full relative">
+              <h1 className="text-center text-2xl py-2 font-bold">Test Image</h1>
+              <div className="relative order-first md:order-last h-80 md:h-96 flex justify-center items-center border border-dashed border-gray-400 m-2 rounded-lg bg-no-repeat bg-center bg-origin-padding bg-cover">
+                {baseImageUrl ? (
+                  <AdvancedImage
+                    style={{ maxWidth: '100%' }}
+                    className="h-96"
+                    cldImg={myImage}
+                    plugins={[responsive(), placeholder()]}
+                  />
+                ) : (
+                  <div className="text-gray-400 opacity-75 flex flex-col justify-center items-center gap-4">
+                    <Icon icon={'ph:image-square-thin'} className="h-16 w-16" />
+                    <span>Upload the Image to Count the Objects</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="w-full rounded-b-lg p-2 md:p-4 bg-gray-200 flex flex-col md:flex-row justify-center md:justify-evenly items-center gap-6 md:gap-24 ">
+            <CloudinaryUploadWidget uwConfig={uwConfig} setPublicId={setPublicId} />
+            <Counter value={value} setValue={setValue} />
+          </div>
+        </div>
+        <div className="w-full md:w-3/4 h-full my-20 relative border border-gray-300 bg-gray-100 rounded-lg">
+          <h1 className="text-center text-2xl py-2 font-bold">Result Image</h1>
+          <div className="relative order-first md:order-last h-80 md:h-96 flex justify-center items-center border border-dashed border-gray-400 m-2 rounded-lg bg-no-repeat bg-center bg-origin-padding bg-cover">
             <div className="text-gray-400 opacity-75 flex flex-col justify-center items-center gap-4">
               <Icon icon={'ph:image-square-thin'} className="h-16 w-16" />
-              <span className="flex items-center gap-4">
-                <Icon icon={'cil:cloud-upload'} className="h-8 w-8" />
-                <h3>Drop You image here</h3>
-              </span>
+              <span>The Result will Appear here</span>
             </div>
-          )}
-        </div>
-        <div className="w-full rounded-l-lg p-2 md:p-4 bg-gray-200 flex flex-row-reverse md:flex-row justify-center items-center gap-6 md:gap-24 border-0 border-r border-gray-300 ">
-          <label
-            htmlFor="restaurantImage"
-            className="cursor-pointer hover:opacity-80 inline-flex items-center shadow-md my-2 px-2 py-2 bg-gray-900 text-gray-50 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-            Select image
-            <input
-              id="restaurantImage"
-              className="text-sm cursor-pointer w-36 hidden"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-          </label>
-          <button
-            onClick={() => {
-              setPreviewImage(null);
-            }}
-            className="inline-flex items-center shadow-md my-2 px-2 py-2 bg-gray-900 text-gray-50 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-            Remove image
-          </button>
+          </div>
+          <AdvancedImage
+            style={{ maxWidth: '100%' }}
+            cldImg={myImage}
+            plugins={[responsive(), placeholder()]}
+          />
+          <div className="w-full rounded-b-lg p-2 md:p-4 bg-gray-200 flex flex-col md:flex-row justify-center md:justify-evenly items-center gap-6 md:gap-24  ">
+            <h1>No of Object: {'210'}</h1>
+            <h1>Accuracy: {'90%'}</h1>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
