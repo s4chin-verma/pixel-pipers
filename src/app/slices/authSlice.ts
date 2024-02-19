@@ -17,6 +17,9 @@ const authSlice = createSlice({
     setLoading: state => {
       state.loading = true;
     },
+    resetLoading: state => {
+      state.loading = false;
+    },
     resetAuthState: state => {
       state.success = false;
       state.userInfo = null;

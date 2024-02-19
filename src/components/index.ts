@@ -8,6 +8,7 @@ import MlModelBtn from './buttons/ModelBtn';
 import CloudinaryUploadWidget from './ui/CloudinaryUploadWidget';
 import ImageUploadBtn from '../pages/Demo';
 import Counter from './ui/Counter';
+import Loader from './ui/loader/Loader';
 
 export {
   NavButton,
@@ -20,4 +21,5 @@ export {
   Counter,
   CloudinaryUploadWidget,
   ImageUploadBtn,
+  Loader
 };

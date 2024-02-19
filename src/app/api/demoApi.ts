@@ -1,13 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { RootState } from '@/app/store';
 import { DemoRequest, DemoResponse } from '@/lib/types/section';
 
 export const demoApi = createApi({
   reducerPath: 'demoApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_BASE_URL,
-    prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.tokens?.access;
+    baseUrl: import.meta.env.VITE_SERVER_URL,
+    prepareHeaders: headers => {
+      const token = import.meta.env.VITE_ML_TOKEN;
       if (token) {
         headers.set('authorization', `Bearer ${token}`);
       }
@@ -18,7 +17,7 @@ export const demoApi = createApi({
   endpoints: builder => ({
     demoApi: builder.mutation<DemoResponse, DemoRequest>({
       query: body => ({
-        url: '/api/demo',
+        url: '/cloudinary',
         method: 'POST',
         body,
       }),

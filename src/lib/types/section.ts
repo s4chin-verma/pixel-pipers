@@ -33,13 +33,12 @@ export type MlModels = {
   price: string;
 };
 
-export type DemoResponse = {
+export type DemoRequest = {
   image_path: string;
   confidence_threshold: string;
 };
 
-export type DemoRequest = {
+export type DemoResponse = {
   count: string;
   image_url: string;
 };
-

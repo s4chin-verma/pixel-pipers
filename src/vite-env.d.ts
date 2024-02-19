@@ -4,6 +4,7 @@ interface ImportMetaEnv {
   readonly VITE_API: string;
   readonly VITE_CLOUD_NAME;
   readonly VITE_UPLOAD_PRESET;
+  readonly VITE_ML_TOKEN
 }
 
 interface ImportMeta {

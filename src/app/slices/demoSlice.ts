@@ -5,6 +5,7 @@ import { DemoState } from '@/lib/types';
 const initialState: DemoState = {
   baseImageUrl: null,
   resultImageUrl: null,
+  
 };
 
 const demoSlice = createSlice({
