@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { setBaseImageUrl } from '@/app/slices/demoSlice';
 import { useAppDispatch } from '@/app/hooks';
+import { DemoBtn } from '@/components';
 
 const CloudinaryScriptContext = createContext<{ loaded: boolean }>({
   loaded: false,
@@ -51,16 +52,10 @@ const CloudinaryUploadWidget: React.FC<{
 
   return (
     <CloudinaryScriptContext.Provider value={{ loaded }}>
-      <button
-        className="inline-flex items-center shadow-md px-8 py-3 bg-gray-900 text-gray-50 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-        onClick={initializeCloudinaryWidget}>
-        Upload
-      </button>
-      <button
-        className="inline-flex items-center shadow-md px-8 py-3 bg-gray-900 text-gray-50 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-        onClick={sendRequest}>
-        Send Request
-      </button>
+      <div className="flex gap-9">
+        <DemoBtn children="upload" onClick={initializeCloudinaryWidget} />
+        <DemoBtn children="Send" onClick={sendRequest} />
+      </div>
     </CloudinaryScriptContext.Provider>
   );
 };

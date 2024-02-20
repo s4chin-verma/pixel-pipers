@@ -3,12 +3,12 @@ import {
   Home,
   NotFound,
   Login,
-  Demo,
   Register,
   Payment,
   PaymentSuccess,
   MlModel,
   MlModelBuy,
+  Demo1
 } from '@/pages';
 
 import { Header } from './container';
@@ -28,10 +28,9 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       { path: '/', element: <Home /> },
-      { path: '/demo/', element: <Demo /> },
       { path: '/login/', element: <Login /> },
       { path: '/register/', element: <Register /> },
-      { path: '/demo/', element: <Demo /> },
+      { path: '/demo/', element: <Demo1 /> },
       { path: '/payment/', element: <Payment /> },
       { path: '/models/', element: <MlModel /> },
       { path: '/models/buy/', element: <MlModelBuy /> },

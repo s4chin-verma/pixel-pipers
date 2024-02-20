@@ -7,5 +7,17 @@ import Payment from './Payment';
 import PaymentSuccess from './PaymentSuccess';
 import MlModel from './MlModels';
 import MlModelBuy from './MlModelBuy';
+import Demo1 from './Demo-2';
 
-export { Home, NotFound, Login, Demo, Register, Payment, PaymentSuccess, MlModel, MlModelBuy };
+export {
+  Home,
+  NotFound,
+  Login,
+  Demo,
+  Register,
+  Payment,
+  PaymentSuccess,
+  MlModel,
+  MlModelBuy,
+  Demo1,
+};

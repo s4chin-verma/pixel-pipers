@@ -1,11 +1,12 @@
-import { Footer, Pricing, CarouselComponent } from '@/container';
+import { Footer, Pricing } from '@/container';
+import Demo from './Demo';
 
 const Home: React.FC = () => {
   return (
     <>
-      <main className='pt-20'>
-
-        <CarouselComponent />
+      <main className="">
+        <Demo />
+        {/* <CarouselComponent /> */}
         <Pricing />
       </main>
       <Footer />

@@ -16,8 +16,8 @@ const CarouselComponent: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto mt-28">
-      <div className="relative" data-carousel="static">
+    <div className="py-24 sm:py-32">
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8 " data-carousel="static">
         {/* Carousel wrapper */}
         <div className="overflow-hidden relative h-56 rounded-xl sm:h-64 xl:h-80 2xl:h-[400px]">
           {/* Slide Items */}

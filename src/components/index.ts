@@ -5,10 +5,11 @@ import FormButton from './form/FormButton';
 import Toast from './ui/Toast';
 import MlModelCard from './card/MlModelCard';
 import MlModelBtn from './buttons/ModelBtn';
-import CloudinaryUploadWidget from './ui/CloudinaryUploadWidget';
+import DemoBtn from './buttons/DemoBtn';
 import ImageUploadBtn from '../pages/Demo';
 import Counter from './ui/Counter';
 import Loader from './ui/loader/Loader';
+import CounterBtn from './buttons/CounterBtn';
 
 export {
   NavButton,
@@ -17,9 +18,10 @@ export {
   FormButton,
   Toast,
   MlModelBtn,
+  DemoBtn,
+  CounterBtn,
   MlModelCard,
   Counter,
-  CloudinaryUploadWidget,
   ImageUploadBtn,
-  Loader
+  Loader,
 };
