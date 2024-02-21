@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Counter, Loader } from '@/components';
+import { Counter, Loader, ResultImage } from '@/components';
 import { CloudinaryUploadWidget } from '@/container';
 import { Cloudinary } from '@cloudinary/url-gen/index';
 import { Icon } from '@iconify/react';
@@ -17,7 +17,7 @@ const Demo: React.FC = () => {
   const { baseImageUrl } = useAppSelector(state => state.demo);
   const infoDivRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
-  const [demoApi, { isLoading, data }] = useDemoApiMutation({ fixedCacheKey: 'myCacheKey' });
+  const [demoApi, { isLoading, data }] = useDemoApiMutation();
   const confidence_threshold = value.toString();
 
   const [uwConfig] = useState<any>({
@@ -59,7 +59,7 @@ const Demo: React.FC = () => {
 
   return (
     <section className="bg-white py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col justify-center items-center bg-white">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col justify-center items-center">
         <h1 className="mb-12 text-3xl font-bold tracking-tight text-gray-800 sm:text-5xl">
           Upload Your Image
         </h1>
@@ -69,13 +69,7 @@ const Demo: React.FC = () => {
               <h1 className="text-center text-2xl py-2 font-bold">Test Image</h1>
               <div className="relative order-first md:order-last h-80 md:h-96 flex justify-center items-center border border-dashed border-gray-400 m-2 rounded-lg bg-no-repeat bg-center bg-origin-padding bg-cover">
                 {baseImageUrl ? (
-                  // <AdvancedImage
-                  //   style={{ maxWidth: '100%' }}
-                  //   className="h-80"
-                  //   cldImg={myImage}
-                  //   plugins={[responsive(), placeholder()]}
-                  // />
-                  <img src={baseImageUrl} alt="baseImage" className="rounded-lg" />
+                  <img src={baseImageUrl} alt="baseImage" className="rounded-lg h-[19rem] sm:h-[23rem]" />
                 ) : (
                   <div className="text-gray-400 opacity-75 flex flex-col justify-center items-center gap-4">
                     <Icon icon={'ph:image-square-thin'} className="h-16 w-16" />
@@ -96,18 +90,13 @@ const Demo: React.FC = () => {
         </div>
         {isLoading && <Loader />}
         {data?.image_url && (
-          <div
-            ref={infoDivRef}
-            className="w-full h-full my-20 relative border border-gray-300 bg-gray-100 rounded-lg">
-            <h1 className="text-center text-2xl py-2 font-bold">Result Image</h1>
-            <div className="relative order-first md:order-last h-80 md:h-96 flex justify-center items-center border border-dashed border-gray-400 m-2 rounded-lg bg-no-repeat bg-center bg-origin-padding bg-cover">
-              <img src={data.image_url} alt="image" className="rounded-lg" />
-            </div>
-            <div className="w-full rounded-b-lg p-2 md:p-4 bg-gray-200 flex flex-col md:flex-row justify-center md:justify-evenly items-center gap-6 md:gap-24  ">
-              <h1 className="text-xl">No of Object: {data?.count}</h1>
-              <h1 className="text-xl">Confidence Threshold: {value * 100}</h1>
-            </div>
-          </div>
+          <ResultImage
+            image_url={data.image_url}
+            infoDivRef={infoDivRef}
+            count={data.count}
+            classname=""
+            value={value}
+          />
         )}
       </div>
     </section>

@@ -42,3 +42,13 @@ export type DemoResponse = {
   count: string;
   image_url: string;
 };
+
+export type FileApiRequest = {
+  // confidence_threshold: string;
+  formData: FormData;
+};
+
+export type FileApiResponse = {
+  count: string;
+  image_url: string;
+};

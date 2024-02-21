@@ -39,6 +39,12 @@ export interface AuthState {
   success: boolean;
 }
 
+export interface FileState {
+  loading: boolean;
+  count: string | null;
+  image_url: string | null;
+  error: string | null;
+}
 export interface DemoState {
   baseImageUrl: string | null;
   resultImageUrl: string | null;
