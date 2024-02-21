@@ -1,4 +1,4 @@
-import logo from '@/assets/react.svg';
+
 import axios from 'axios';
 
 interface RazorpayResponse {
@@ -78,7 +78,7 @@ const Payment = (): JSX.Element => {
 
   return (
     <>
-      <img src={logo} className="App-logo" alt="logo" />
+      {/* <img src={logo} className="App-logo" alt="logo" /> */}
       <p>Buy React now!</p>
       <button className="p-8 bg-slate-400" onClick={displayRazorpay}>
         Pay ₹500
