@@ -67,9 +67,15 @@ const Demo: React.FC = () => {
           <div className="md:flex">
             <div className="w-full h-full relative">
               <h1 className="text-center text-2xl py-2 font-bold">Test Image</h1>
-              <div className="relative order-first md:order-last h-80 md:h-96 flex justify-center items-center border border-dashed border-gray-400 m-2 rounded-lg bg-no-repeat bg-center bg-origin-padding bg-cover">
+              <div className="relative order-first md:order-last h-96 flex justify-center items-center border border-dashed border-gray-400 m-2 rounded-lg bg-no-repeat bg-center bg-origin-padding bg-cover">
                 {baseImageUrl ? (
-                  <img src={baseImageUrl} alt="baseImage" className="rounded-lg h-[19rem] sm:h-[23rem]" />
+                  <div className="h-96 p-2">
+                    <img
+                      src={baseImageUrl}
+                      alt="baseImage"
+                      className="rounded-lg overflow-hidden h-full"
+                    />
+                  </div>
                 ) : (
                   <div className="text-gray-400 opacity-75 flex flex-col justify-center items-center gap-4">
                     <Icon icon={'ph:image-square-thin'} className="h-16 w-16" />
