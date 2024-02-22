@@ -1,64 +1,73 @@
 import React, { useState } from 'react';
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
-
 interface Coordinates {
   x: number;
   y: number;
 }
-type props = {
-  img: string;
-};
+interface ImageAnnotationProps {
+  image_url: string;
+}
 
-const ImageAnnotation: React.FC<props> = ({ img }) => {
+const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
   const [open, setOpen] = useState(false);
-
-  const onOpenModal = () => setOpen(true);
-  const onCloseModal = () => setOpen(false);
   const [startCoordinates, setStartCoordinates] = useState<Coordinates>({ x: 0, y: 0 });
   const [endCoordinates, setEndCoordinates] = useState<Coordinates>({ x: 0, y: 0 });
   const [showBox, setShowBox] = useState<boolean>(false);
   const [showControls, setShowControls] = useState<boolean>(false);
-  const [clickedCoordinate, setClickedCoordinate] = useState<string | null>(null); // State to store clicked coordinate
-  const [selectedOption, setSelectedOption] = useState<string | null>(null); // State to store selected option
+  const [clickedCoordinate, setClickedCoordinate] = useState<string | null>(null);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
-  const handleImageMouseDown = (e: React.MouseEvent<HTMLImageElement>) => {
-    // Capture the starting coordinates relative to the image
-    const imageRect = e.currentTarget.getBoundingClientRect();
-    const startX = e.clientX - imageRect.left;
-    const startY = e.clientY - imageRect.top;
-    setStartCoordinates({ x: startX, y: startY });
-    setShowBox(true);
+  const handleImageMouseDown = (
+    e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>
+  ) => {
+    const imageElement = document.querySelector('.image-container img') as HTMLImageElement;
+    if (imageElement) {
+      const imageRect = imageElement.getBoundingClientRect();
+      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+      const startX = clientX - imageRect.left;
+      const startY = clientY - imageRect.top;
+      setStartCoordinates({ x: startX, y: startY });
+      setShowBox(true);
 
-    const handleMouseMove = (e: MouseEvent) => {
-      // Update the end coordinates relative to the image as the mouse moves
-      setEndCoordinates({
-        x: e.clientX - imageRect.left,
-        y: e.clientY - imageRect.top,
-      });
-    };
+      const handleMouseMove = (e: MouseEvent | TouchEvent) => {
+        let boundedX, boundedY;
 
-    const handleMouseUp = (e: MouseEvent) => {
-      // Capture the ending coordinates relative to the image
-      setEndCoordinates({
-        x: e.clientX - imageRect.left,
-        y: e.clientY - imageRect.top,
-      });
-      setShowBox(true); // Show the box permanently after release
-      setShowControls(true);
+        if ('touches' in e) {
+          boundedX = e.touches[0].clientX - imageRect.left;
+          boundedY = e.touches[0].clientY - imageRect.top;
+        } else {
+          boundedX = e.clientX - imageRect.left;
+          boundedY = e.clientY - imageRect.top;
+        }
 
-      // Remove event listeners when mouse is released
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
+        boundedX = Math.max(0, Math.min(boundedX, imageElement.width));
+        boundedY = Math.max(0, Math.min(boundedY, imageElement.height));
+        setEndCoordinates({
+          x: boundedX,
+          y: boundedY,
+        });
+      };
 
-    // Add event listeners for mouse move and mouse up events
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
+      const handleMouseUp = () => {
+        setShowBox(true);
+        setShowControls(true);
+
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseup', handleMouseUp);
+        window.removeEventListener('touchmove', handleMouseMove);
+        window.removeEventListener('touchend', handleMouseUp);
+      };
+
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+      window.addEventListener('touchmove', handleMouseMove);
+      window.addEventListener('touchend', handleMouseUp);
+    }
   };
 
   const handleTicButtonClick = () => {
-    // When the tic button is clicked, print the start and end coordinates along with the selected option
     if (selectedOption) {
       setClickedCoordinate(
         `Selected Option: ${selectedOption}, Start: (${startCoordinates.x}, ${startCoordinates.y}), End: (${endCoordinates.x}, ${endCoordinates.y})`
@@ -85,15 +94,18 @@ const ImageAnnotation: React.FC<props> = ({ img }) => {
 
   return (
     <>
-      <button onClick={onOpenModal} className='bg-cyan-300 px-10 py-2 rounded-lg'>Open modal</button>
-      <Modal open={open} onClose={onCloseModal} center>
+      <button onClick={() => setOpen(true)} className="bg-cyan-300 px-10 py-2 rounded-lg">
+        Open modal
+      </button>
+      <Modal open={open} onClose={() => setOpen(false)} center>
         <div className="image-annotation-container">
           <h1>Image Annotation Tool</h1>
           <div className="image-container" style={{ position: 'relative' }}>
             <img
-              src={img}
+              src={image_url}
               alt="Annotated Image"
               onMouseDown={handleImageMouseDown}
+              onTouchStart={handleImageMouseDown}
               draggable={false}
             />
             {showBox && (
@@ -112,14 +124,12 @@ const ImageAnnotation: React.FC<props> = ({ img }) => {
                   <>
                     <button
                       className="h-12 w-12 bg-red-100 absolute top-0 left-0"
-                      onClick={handleTicButtonClick} // Attach handleTicButtonClick function
-                    >
+                      onClick={handleTicButtonClick}>
                       ✓
                     </button>
                     <button
                       className="absolute top-0 right-0 bg-green-200 px-10 py-2"
-                      onClick={handleCrossButtonClick} // Attach handleCrossButtonClick function
-                    >
+                      onClick={handleCrossButtonClick}>
                       ✗
                     </button>
                   </>
