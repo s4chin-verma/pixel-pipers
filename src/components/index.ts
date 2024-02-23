@@ -11,6 +11,7 @@ import Counter from './ui/Counter';
 import Loader from './ui/loader/Loader';
 import CounterBtn from './buttons/CounterBtn';
 import ResultImage from './card/ResultCard';
+import ImageAnnotation from './ui/ImageAnnotation';
 
 export {
   NavButton,
@@ -25,5 +26,6 @@ export {
   Counter,
   ImageUploadBtn,
   Loader,
-  ResultImage
+  ResultImage,
+  ImageAnnotation,
 };

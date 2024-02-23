@@ -72,17 +72,17 @@ const Demo: React.FC = () => {
         <h1 className="mb-8 text-3xl font-bold tracking-tight text-gray-600 sm:text-5xl">
           Upload Your Image
         </h1>
-        <div className="w-full sm:w-3/4 h-full relative border border-gray-300 bg-gray-100 rounded-lg">
+        <div className="w-full sm:w-3/4 relative border border-gray-300 bg-gray-100 rounded-lg">
           <h1 className="text-center text-2xl py-2 font-bold">Test Image</h1>
           <div
-            className="relative order-first md:order-last h-96 md:h-96 flex justify-center items-center border border-dashed border-gray-400 m-2 rounded-lg bg-no-repeat bg-center bg-origin-padding bg-cover"
+            className="relative order-first md:order-last h-80 sm:h-96 flex justify-center items-center border border-dashed border-gray-400 m-2 rounded-lg bg-no-repeat bg-center bg-origin-padding bg-cover p-2"
             onDrop={handleDrop}
             onDragOver={handleDragOver}>
             {previewImage ? (
               <img
                 src={previewImage}
                 alt="Preview image"
-                className="rounded-lg h-76 md:h-[360px] overflow-hidden"
+                className="rounded-lg overflow-hidden h-full"
               />
             ) : (
               <div className="text-gray-400 opacity-75 flex flex-col justify-center items-center gap-4">
@@ -108,7 +108,7 @@ const Demo: React.FC = () => {
                   onChange={handleImageChange}
                 />
               </label>
-              <DemoBtn onClick={handleSendImageToServer} children="Send" />
+              <DemoBtn onClick={handleSendImageToServer} children="Send" className="w-32 h-10" />
             </div>
             <Counter value={value} setValue={setValue} />
           </div>

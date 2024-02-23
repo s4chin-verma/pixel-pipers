@@ -14,7 +14,6 @@ export const sendImageToServer = createAsyncThunk(
     const blob = await fetch(previewImage).then(res => res.blob());
     formData.append('uploadImage', blob);
     formData.append('confidence_threshold', confidence_threshold);
-    console.log(formData);
 
     try {
       showToast('Request Send to Server', 'info');
