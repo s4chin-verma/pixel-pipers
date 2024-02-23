@@ -53,8 +53,8 @@ const CloudinaryUploadWidget: React.FC<{
   return (
     <CloudinaryScriptContext.Provider value={{ loaded }}>
       <div className="flex gap-9">
-        <DemoBtn children="upload" onClick={initializeCloudinaryWidget} />
-        <DemoBtn children="Send" onClick={sendRequest} />
+        <DemoBtn children="upload" onClick={initializeCloudinaryWidget} className="w-32 h-10" />
+        <DemoBtn children="Send" onClick={sendRequest} className="w-32 h-10" />
       </div>
     </CloudinaryScriptContext.Provider>
   );

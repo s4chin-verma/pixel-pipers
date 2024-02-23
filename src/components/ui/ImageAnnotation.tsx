@@ -1,10 +1,21 @@
 import React, { useState } from 'react';
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { DemoBtn } from '@/components';
+
 interface Coordinates {
   x: number;
   y: number;
 }
+
+interface Annotation {
+  id: number;
+  coordinates: Coordinates;
+  endCoordinates: Coordinates;
+  option: string | null;
+}
+
 interface ImageAnnotationProps {
   image_url: string;
 }
@@ -13,10 +24,13 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
   const [open, setOpen] = useState(false);
   const [startCoordinates, setStartCoordinates] = useState<Coordinates>({ x: 0, y: 0 });
   const [endCoordinates, setEndCoordinates] = useState<Coordinates>({ x: 0, y: 0 });
+  const [annotations, setAnnotations] = useState<Annotation[]>([]);
   const [showBox, setShowBox] = useState<boolean>(false);
   const [showControls, setShowControls] = useState<boolean>(false);
+  const [showOptions, setShowOptions] = useState<boolean>(false);
   const [clickedCoordinate, setClickedCoordinate] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [nextId, setNextId] = useState<number>(1);
 
   const handleImageMouseDown = (
     e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>
@@ -52,7 +66,8 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
 
       const handleMouseUp = () => {
         setShowBox(true);
-        setShowControls(true);
+        // setShowControls(true);
+        setShowOptions(true);
 
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('mouseup', handleMouseUp);
@@ -69,38 +84,52 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
 
   const handleTicButtonClick = () => {
     if (selectedOption) {
+      const newAnnotation: Annotation = {
+        id: nextId,
+        coordinates: startCoordinates,
+        endCoordinates: endCoordinates,
+        option: selectedOption,
+      };
+      setAnnotations([...annotations, newAnnotation]);
+      setNextId(nextId + 1);
       setClickedCoordinate(
         `Selected Option: ${selectedOption}, Start: (${startCoordinates.x}, ${startCoordinates.y}), End: (${endCoordinates.x}, ${endCoordinates.y})`
       );
     } else {
       setClickedCoordinate(
-        `Start: (${startCoordinates.x}, ${startCoordinates.y}), End: (${endCoordinates.x}, ${endCoordinates.y})`
+        `  Start: (${startCoordinates.x}, ${startCoordinates.y}), End: (${endCoordinates.x}, ${endCoordinates.y})`
       );
     }
     setShowBox(false);
   };
 
   const handleCrossButtonClick = () => {
-    // When the cross button is clicked, hide the transparent box and reset selected option
+    setClickedCoordinate(null);
     setShowBox(false);
     setShowControls(false);
     setSelectedOption(null);
   };
 
   const handleOptionSelect = (option: string) => {
-    // Function to handle option selection
+    setShowControls(true);
     setSelectedOption(option);
   };
 
+  const handleRemoveAnnotations = () => {
+    setAnnotations([]);
+    setShowControls(false);
+    setShowOptions(false);
+    setClickedCoordinate(null);
+  };
   return (
     <>
-      <button onClick={() => setOpen(true)} className="bg-cyan-300 px-10 py-2 rounded-lg">
-        Open modal
-      </button>
+      <DemoBtn onClick={() => setOpen(true)} className="h-10 w-40 mt-1">
+        Open Annotation
+      </DemoBtn>
       <Modal open={open} onClose={() => setOpen(false)} center>
         <div className="image-annotation-container">
-          <h1>Image Annotation Tool</h1>
-          <div className="image-container" style={{ position: 'relative' }}>
+          <h1 className="text-center font-bold text-xl text-gray-900">Image Annotation Tool</h1>
+          <div id="image-container" className="image-container relative">
             <img
               src={image_url}
               alt="Annotated Image"
@@ -108,6 +137,21 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
               onTouchStart={handleImageMouseDown}
               draggable={false}
             />
+            {annotations.map(annotation => (
+              <div
+                key={annotation.id}
+                style={{
+                  position: 'absolute',
+                  top: annotation.coordinates.y,
+                  left: annotation.coordinates.x,
+                  bottom: annotation.endCoordinates.x,
+                  right: annotation.endCoordinates.y,
+                  width: Math.abs(annotation.endCoordinates.x - annotation.coordinates.x),
+                  height: Math.abs(annotation.endCoordinates.y - annotation.coordinates.y),
+                  border: '1px solid red',
+                  backgroundColor: 'rgba(0, 0, 255, 0.3)',
+                }}></div>
+            ))}
             {showBox && (
               <div
                 style={{
@@ -119,54 +163,59 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
                   border: '1px solid blue',
                   backgroundColor: 'rgba(0, 0, 255, 0.3)',
                   display: 'block',
-                }}>
-                {showControls && (
-                  <>
-                    <button
-                      className="h-12 w-12 bg-red-100 absolute top-0 left-0"
-                      onClick={handleTicButtonClick}>
-                      ✓
-                    </button>
-                    <button
-                      className="absolute top-0 right-0 bg-green-200 px-10 py-2"
-                      onClick={handleCrossButtonClick}>
-                      ✗
-                    </button>
-                  </>
-                )}
-              </div>
+                }}></div>
             )}
           </div>
+
           <div>
-            <h2>Coordinates:</h2>
+            {/* <h2>Coordinates:</h2>
             <p>
               Start: ({startCoordinates.x}, {startCoordinates.y})
             </p>
             <p>
               End: ({endCoordinates.x}, {endCoordinates.y})
-            </p>
-            {clickedCoordinate && <p>{clickedCoordinate}</p>} {/* Display clicked coordinates */}
+            </p> */}
+            {clickedCoordinate && <p>{clickedCoordinate}</p>}
           </div>
-          {showControls && (
-            <div>
-              <h2>Select Option:</h2>
-              <button
-                onClick={() => handleOptionSelect('Option 1')}
-                className="bg-green-300 rounded-md px-10 py-3">
-                Option 1
-              </button>
-              <button
-                onClick={() => handleOptionSelect('Option 2')}
-                className="bg-green-300 rounded-md px-10 py-3">
-                Option 2
-              </button>
-              <button
-                onClick={() => handleOptionSelect('Option 3')}
-                className="bg-green-300 rounded-md px-10 py-3">
-                Option 3
-              </button>
-            </div>
-          )}
+          <div className="flex flex-col items-center justify-center">
+            {showOptions && (
+              <>
+                <h2 className="text-gray-900 text-lg mb-2 font-semibold">Select Option:</h2>
+                <div className="flex justify-between w-full my-3">
+                  <DemoBtn
+                    children="pipe-1"
+                    onClick={() => handleOptionSelect('1')}
+                    className="w-20 h-8"
+                  />
+                  <DemoBtn
+                    children="pipe-2"
+                    onClick={() => handleOptionSelect('2')}
+                    className="w-20 h-8"
+                  />
+                  <DemoBtn
+                    children="pipe-3"
+                    onClick={() => handleOptionSelect('3')}
+                    className="w-20 h-8"
+                  />
+                </div>
+              </>
+            )}
+            {showControls && (
+              <div className="w-full flex justify-between my-4">
+                <DemoBtn className="h-9 w-32 gap-2" onClick={handleTicButtonClick}>
+                  <span>Annotate</span>
+                  <Icon icon={'mingcute:check-fill'} className="h-4 w-4" />
+                </DemoBtn>
+                <DemoBtn className="h-9 w-32 gap-1" onClick={handleCrossButtonClick}>
+                  <span>Cancel</span>
+                  <Icon icon={'charm:cross'} className="h-5 w-5" />
+                </DemoBtn>
+              </div>
+            )}
+            <DemoBtn className="h-11 w-36 mt-2" onClick={handleRemoveAnnotations}>
+              Remove Annotations
+            </DemoBtn>
+          </div>
         </div>
       </Modal>
     </>

@@ -5,7 +5,7 @@ interface NavButtonProps {
   }
   
   const NavButton: React.FC<NavButtonProps> = ({ onClick, className, navbarCollapsed }) => {
-    const classes = `bg-cyan-500 h-0.5 duration-200 ${navbarCollapsed ? 'absolute' : ''}`;
+    const classes = `bg-gray-800 h-0.5 duration-200 ${navbarCollapsed ? 'absolute' : ''}`;
   
     return (
       <button
