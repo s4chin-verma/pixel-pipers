@@ -128,7 +128,7 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
       <DemoBtn onClick={() => setOpen(true)} className="h-10 w-40 mt-1">
         Open Annotation
       </DemoBtn>
-      <Modal open={open} onClose={() => setOpen(false)} center>
+      <Modal open={open} onClose={() => setOpen(false)} center >
         <div className="image-annotation-container">
           <h1 className="text-center font-bold text-xl text-gray-900">Image Annotation Tool</h1>
           <div id="image-container" className="image-container relative">

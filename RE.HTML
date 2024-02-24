@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Object Marking</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+      #annotations {
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <img id="image" src="./src/assets/annotaion.jpeg" alt="Image" style="display: none" />
+
+    <canvas id="canvas"></canvas>
+    <div id="annotations"></div>
+
+    <script>
+      var canvas = document.getElementById('canvas');
+      var ctx = canvas.getContext('2d');
+      var annotationsDiv = document.getElementById('annotations');
+      var image = document.getElementById('image');
+
+      image.onload = function () {
+        var aspectRatio = image.width / image.height;
+        var canvasWidth = Math.min(image.width, window.innerWidth);
+        var canvasHeight = canvasWidth / aspectRatio;
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+        ctx.drawImage(image, 0, 0, canvasWidth, canvasHeight);
+      };
+
+      var startX, startY, endX, endY;
+      var isDrawing = false;
+      var annotations = [];
+
+      function handleMouseDown(e) {
+        if (e.button === 0) {
+          // Left click
+          isDrawing = true;
+          startX = e.offsetX / canvas.width; // Start X relative to canvas width
+          startY = e.offsetY / canvas.height; // Start Y relative to canvas height
+        }
+      }
+
+      function handleMouseMove(e) {
+        if (!isDrawing) return;
+        endX = e.offsetX / canvas.width; // End X relative to canvas width
+        endY = e.offsetY / canvas.height; // End Y relative to canvas height
+        drawRectangle();
+      }
+
+      function handleMouseUp(e) {
+        if (e.button === 0) {
+          // Left click
+          isDrawing = false;
+          var annotation = {
+            centerX: (startX + (endX - startX) / 2).toFixed(6), // Center X relative to canvas width
+            centerY: (startY + (endY - startY) / 2).toFixed(6), // Center Y relative to canvas height
+            width: Math.abs(endX - startX).toFixed(6), // Width relative to canvas width
+            height: Math.abs(endY - startY).toFixed(6), // Height relative to canvas height
+          };
+          annotations.push(annotation);
+          displayAnnotations();
+        }
+      }
+
+      function drawRectangle() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        annotations.forEach(function (annotation) {
+          drawBox(annotation);
+        });
+        ctx.beginPath();
+        ctx.rect(
+          startX * canvas.width,
+          startY * canvas.height,
+          (endX - startX) * canvas.width,
+          (endY - startY) * canvas.height
+        );
+        ctx.strokeStyle = 'red';
+        ctx.stroke();
+      }
+
+      function drawBox(annotation) {
+        var x = annotation.centerX * canvas.width - (annotation.width * canvas.width) / 2;
+        var y = annotation.centerY * canvas.height - (annotation.height * canvas.height) / 2;
+        var w = annotation.width * canvas.width;
+        var h = annotation.height * canvas.height;
+        ctx.beginPath();
+        ctx.rect(x, y, w, h);
+        ctx.strokeStyle = 'red';
+        ctx.stroke();
+      }
+
+      function displayAnnotations() {
+        annotationsDiv.innerHTML = '';
+        annotations.forEach(function (annotation, index) {
+          drawBox(annotation);
+          var annotationText = document.createElement('div');
+          annotationText.textContent = `${annotation.centerX} ${annotation.centerY} ${annotation.width} ${annotation.height}`;
+          annotationsDiv.appendChild(annotationText);
+        });
+      }
+
+      canvas.addEventListener('mousedown', handleMouseDown);
+      canvas.addEventListener('mousemove', handleMouseMove);
+      canvas.addEventListener('mouseup', handleMouseUp);
+    </script>
+  </body>
+</html>
