@@ -23,13 +23,75 @@ const Demo: React.FC = () => {
   }, [image_url]);
 
   const handleSendImageToServer = () => {
-    if (previewImage) dispatch(sendImageToServer({ previewImage, confidence_threshold }));
-    else showToast('Select a Image', 'warning');
+    if (previewImage) {
+      const image = new Image();
+      image.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          const maxWidth = 800; // Adjust as needed
+          const maxHeight = 600; // Adjust as needed
+          let width = image.width;
+          let height = image.height;
+
+          if (width > height) {
+            if (width > maxWidth) {
+              height *= maxWidth / width;
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width *= maxHeight / height;
+              height = maxHeight;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          ctx.drawImage(image, 0, 0, width, height);
+
+          canvas.toBlob(
+            blob => {
+              if (blob) {
+                const compressedFile = new File([blob], 'compressed_image.jpg');
+                console.log(compressedFile);
+                if (compressedFile.size > 500 * 1024) {
+                  console.log('Compressed image size:', compressedFile.size);
+                  showToast('Image size exceeds 500kb', 'warning');
+                } else {
+                  const reader = new FileReader();
+                  console.log('i am Reader', reader);
+                  reader.onload = () => {
+                    if (typeof reader.result === 'string') {
+                      setPreviewImage(reader.result);
+                      console.log(previewImage);
+                      dispatch(
+                        sendImageToServer({ previewImage: reader.result, confidence_threshold })
+                      );
+                    }
+                  };
+                  reader.readAsDataURL(compressedFile);
+                }
+              } else {
+                showToast('Failed to compress image', 'error');
+              }
+            },
+            'image/jpeg',
+            0.7
+          );
+        }
+      };
+      image.src = previewImage;
+    } else {
+      showToast('Select a Image', 'warning');
+    }
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
     if (file) {
+      console.log('uploaded File', file);
       previewImageFromFile(file);
     }
   };

@@ -27,7 +27,7 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
   const [showBox, setShowBox] = useState<boolean>(false);
   const [showControls, setShowControls] = useState<boolean>(false);
-  const [showOptions, setShowOptions] = useState<boolean>(false);
+  // const [showOptions, setShowOptions] = useState<boolean>(false);
   const [clickedCoordinate, setClickedCoordinate] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [nextId, setNextId] = useState<number>(1);
@@ -66,8 +66,8 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
 
       const handleMouseUp = () => {
         setShowBox(true);
-        // setShowControls(true);
-        setShowOptions(true);
+        setShowControls(true);
+        // setShowOptions(true);
 
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('mouseup', handleMouseUp);
@@ -83,24 +83,25 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
   };
 
   const handleTicButtonClick = () => {
-    if (selectedOption) {
-      const newAnnotation: Annotation = {
-        id: nextId,
-        coordinates: startCoordinates,
-        endCoordinates: endCoordinates,
-        option: selectedOption,
-      };
-      setAnnotations([...annotations, newAnnotation]);
-      setNextId(nextId + 1);
-      setClickedCoordinate(
-        `Selected Option: ${selectedOption}, Start: (${startCoordinates.x}, ${startCoordinates.y}), End: (${endCoordinates.x}, ${endCoordinates.y})`
-      );
-    } else {
-      setClickedCoordinate(
-        `  Start: (${startCoordinates.x}, ${startCoordinates.y}), End: (${endCoordinates.x}, ${endCoordinates.y})`
-      );
-    }
+    // if (selectedOption) {
+    const newAnnotation: Annotation = {
+      id: nextId,
+      coordinates: startCoordinates,
+      endCoordinates: endCoordinates,
+      option: selectedOption,
+    };
+    setAnnotations([...annotations, newAnnotation]);
+    setNextId(nextId + 1);
+    // setClickedCoordinate(
+    //   `Selected Option: ${selectedOption}, Start: (${startCoordinates.x}, ${startCoordinates.y}), End: (${endCoordinates.x}, ${endCoordinates.y})`
+    // );
+    // } else {
+    setClickedCoordinate(
+      `  Start: (${startCoordinates.x}, ${startCoordinates.y}), End: (${endCoordinates.x}, ${endCoordinates.y})`
+    );
+    // }
     setShowBox(false);
+    setShowControls(false);
   };
 
   const handleCrossButtonClick = () => {
@@ -110,15 +111,16 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
     setSelectedOption(null);
   };
 
-  const handleOptionSelect = (option: string) => {
-    setShowControls(true);
-    setSelectedOption(option);
-  };
+  // const handleOptionSelect = (option: string) => {
+  //   setShowControls(true);
+  //   setSelectedOption(option);
+  // };
 
   const handleRemoveAnnotations = () => {
     setAnnotations([]);
+    setShowBox(false);
     setShowControls(false);
-    setShowOptions(false);
+    // setShowOptions(false);
     setClickedCoordinate(null);
   };
   return (
@@ -126,7 +128,7 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
       <DemoBtn onClick={() => setOpen(true)} className="h-10 w-40 mt-1">
         Open Annotation
       </DemoBtn>
-      <Modal open={open} onClose={() => setOpen(false)} center>
+      <Modal open={open} onClose={() => setOpen(false)} center >
         <div className="image-annotation-container">
           <h1 className="text-center font-bold text-xl text-gray-900">Image Annotation Tool</h1>
           <div id="image-container" className="image-container relative">
@@ -178,7 +180,7 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
             {clickedCoordinate && <p>{clickedCoordinate}</p>}
           </div>
           <div className="flex flex-col items-center justify-center">
-            {showOptions && (
+            {/* {showOptions && (
               <>
                 <h2 className="text-gray-900 text-lg mb-2 font-semibold">Select Option:</h2>
                 <div className="flex justify-between w-full my-3">
@@ -199,7 +201,7 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
                   />
                 </div>
               </>
-            )}
+            )} */}
             {showControls && (
               <div className="w-full flex justify-between my-4">
                 <DemoBtn className="h-9 w-32 gap-2" onClick={handleTicButtonClick}>
