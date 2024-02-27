@@ -11,7 +11,7 @@ import Loader from './ui/loader/Loader';
 import CounterBtn from './buttons/CounterBtn';
 import ResultImage from './card/ResultImage';
 import ImageAnnotation from './ui/ImageAnnotation';
-import CoordinateImage from './ui/CordinateImage';
+import CoordinateImage from './ui/CoordinateImage';
 
 export {
   NavButton,

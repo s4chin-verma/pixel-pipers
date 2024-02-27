@@ -171,7 +171,7 @@ const Demo: React.FC = () => {
           </div>
         </div>
         {loading && <Loader />}
-        {coordinates && previewImage && (
+        {!loading && coordinates && previewImage && (
           <ResultImage
             image={previewImage}
             infoDivRef={infoDivRef}

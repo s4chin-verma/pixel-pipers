@@ -1,26 +1,11 @@
-import React, { useState } from 'react';
-import 'react-responsive-modal/styles.css';
+import { useState } from 'react';
 import { Modal } from 'react-responsive-modal';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { DemoBtn } from '@/components';
+import { Annotation, Coordinates } from '@/lib/types/section';
+import 'react-responsive-modal/styles.css';
 
-interface Coordinates {
-  x: number;
-  y: number;
-}
-
-interface Annotation {
-  id: number;
-  coordinates: Coordinates;
-  endCoordinates: Coordinates;
-  option: string | null;
-}
-
-interface ImageAnnotationProps {
-  image_url: string;
-}
-
-const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
+const ImageAnnotation: React.FC<{ previewImage: string }> = ({ previewImage }) => {
   const [open, setOpen] = useState(false);
   const [startCoordinates, setStartCoordinates] = useState<Coordinates>({ x: 0, y: 0 });
   const [endCoordinates, setEndCoordinates] = useState<Coordinates>({ x: 0, y: 0 });
@@ -33,34 +18,6 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
   const [clickedCoordinate, setClickedCoordinate] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [nextId, setNextId] = useState<number>(1);
-
-  function get_yolo_annotation_info(
-    start_x: number,
-    start_y: number,
-    end_x: number,
-    end_y: number,
-    image_width: number,
-    image_height: number
-  ) {
-    // Calculate box dimensions
-    const box_width = end_x - start_x;
-    const box_height = end_y - start_y;
-
-    // Calculate center coordinates (normalized)
-    const center_x = (start_x + box_width / 2) / image_width;
-    const center_y = (start_y + box_height / 2) / image_height;
-
-    // Calculate width and height (normalized)
-    const width = box_width / image_width;
-    const height = box_height / image_height;
-
-    return {
-      center_x: center_x,
-      center_y: center_y,
-      width: width,
-      height: height,
-    };
-  }
 
   const handleImageMouseDown = (
     e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>
@@ -113,17 +70,44 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
     }
   };
 
+  function get_yolo_annotation_info(
+    start_x: number,
+    start_y: number,
+    end_x: number,
+    end_y: number,
+    image_width: number,
+    image_height: number
+  ) {
+    // Calculate box dimensions
+    const box_width = end_x - start_x;
+    const box_height = end_y - start_y;
+
+    // Calculate center coordinates (normalized)
+    const center_x = (start_x + box_width / 2) / image_width;
+    const center_y = (start_y + box_height / 2) / image_height;
+
+    // Calculate width and height (normalized)
+    const width = box_width / image_width;
+    const height = box_height / image_height;
+
+    return {
+      center_x: center_x,
+      center_y: center_y,
+      width: width,
+      height: height,
+    };
+  }
+
   const handleTicButtonClick = () => {
-    console.log(
-      get_yolo_annotation_info(
-        startCoordinates.x,
-        startCoordinates.y,
-        endCoordinates.x,
-        endCoordinates.y,
-        h,
-        w
-      )
+    const yolo = get_yolo_annotation_info(
+      startCoordinates.x,
+      startCoordinates.y,
+      endCoordinates.x,
+      endCoordinates.y,
+      h,
+      w
     );
+
     const newAnnotation: Annotation = {
       id: nextId,
       coordinates: startCoordinates,
@@ -133,7 +117,7 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
     setAnnotations([...annotations, newAnnotation]);
     setNextId(nextId + 1);
     setClickedCoordinate(
-      `Start: (${startCoordinates.x}, ${startCoordinates.y}), End: (${endCoordinates.x}, ${endCoordinates.y})`
+      `Coordinate: (${yolo.center_x}, ${yolo.center_y}), Dimension: (${yolo.height}, ${yolo.width})`
     );
     setShowBox(false);
     setShowControls(false);
@@ -152,21 +136,27 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
     setShowControls(false);
     setClickedCoordinate(null);
   };
+
+  const handleClick = () => {
+    setOpen(false);
+    setAnnotations([]);
+  };
   return (
     <>
       <DemoBtn onClick={() => setOpen(true)} className="h-10 w-40 mt-1">
         Open Annotation
       </DemoBtn>
-      <Modal open={open} onClose={() => setOpen(false)} center>
+      <Modal open={open} onClose={handleClick} center>
         <div className="image-annotation-container">
           <h1 className="text-center font-bold text-xl text-gray-900">Image Annotation Tool</h1>
-          <div id="image-container" className="image-container relative">
+          <div id="image-container" className="image-container relative p-4">
             <img
-              src={image_url}
+              src={previewImage}
               alt="Annotated Image"
               onMouseDown={handleImageMouseDown}
               onTouchStart={handleImageMouseDown}
               draggable={false}
+              width={500}
             />
             {annotations.map(annotation => (
               <div
@@ -211,9 +201,18 @@ const ImageAnnotation: React.FC<ImageAnnotationProps> = ({ image_url }) => {
                 </DemoBtn>
               </div>
             )}
-            <DemoBtn className="h-11 w-36 mt-2" onClick={handleRemoveAnnotations}>
-              Remove Annotations
-            </DemoBtn>
+            <div className="flex items-center justify-center gap-12">
+              <DemoBtn className="h-11 w-36 mt-2" onClick={handleRemoveAnnotations}>
+                Remove Annotations
+              </DemoBtn>
+              <DemoBtn
+                className="h-11 w-36 mt-2 bg-green-500"
+                onClick={() => {
+                  setOpen(false);
+                }}>
+                Send
+              </DemoBtn>
+            </div>
           </div>
         </div>
       </Modal>

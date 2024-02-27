@@ -52,3 +52,19 @@ export type FileApiResponse = {
   count: string;
   image_url: string;
 };
+
+export interface Coordinates {
+  x: number;
+  y: number;
+}
+
+export interface Annotation {
+  id: number;
+  coordinates: Coordinates;
+  endCoordinates: Coordinates;
+  option: string | null;
+}
+
+export interface ImageAnnotationProps {
+  image_url: string;
+}

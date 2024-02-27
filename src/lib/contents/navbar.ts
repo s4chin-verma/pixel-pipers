@@ -6,6 +6,5 @@ export const navbarSection: NavbarSectionType = {
     { name: 'How to Use', url: '/' },
     { name: 'Login', url: '/login/' },
     { name: 'Register', url: '/register/' },
-    { name: 'Try Demo', url: '/demo/' },
   ],
 };

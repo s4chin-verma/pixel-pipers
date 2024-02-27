@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Stage, Layer, Circle, Image as KonvaImage } from 'react-konva';
+import { Stage, Layer, Text, Image as KonvaImage } from 'react-konva';
 import useConvertToCoordinates from '@/lib/hooks/useConvertToCoordinates';
 import { useAppSelector } from '@/app/hooks';
 
@@ -21,7 +21,7 @@ const CoordinateImage: React.FC<{ previewImage: string }> = ({ previewImage }) =
         <Layer>
           {imageObj && <KonvaImage image={imageObj} width={400} height={400} cornerRadius={10} />}
           {pipeCoordinates.map((coord, index) => (
-            <Circle key={index} x={coord.x * 400} y={coord.y * 400} radius={4} fill="green" />
+            <Text key={index} x={coord.x * 400} y={coord.y * 400} text={`${index + 1}`} fontSize={16} fill="red" fontWeight="bold" />
           ))}
         </Layer>
       </Stage>

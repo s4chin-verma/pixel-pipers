@@ -28,7 +28,7 @@ const ResultImage: React.FC<Props> = ({
       <div className="w-full rounded-b-lg p-2 md:p-4 bg-gray-200 flex flex-col md:flex-row justify-center md:justify-evenly items-center gap-1 md:gap-24">
         <h1 className="text-lg sm:text-xl">No of Object: {count}</h1>
         <h1 className="text-lg sm:text-xl">Confidence Threshold: {value}</h1>
-        <ImageAnnotation image_url={image} />
+        <ImageAnnotation previewImage={image} />
       </div>
     </div>
   );
