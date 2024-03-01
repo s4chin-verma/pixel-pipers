@@ -1,11 +1,12 @@
 import { Footer } from '@/container';
-import Demo2 from './Demo-2';
+import Demo from './Demo';
 
 const Home: React.FC = () => {
   return (
     <>
       <main className="">
-        <Demo2 />
+        <Demo />
+        {/* <Test /> */}
         {/* <CarouselComponent /> */}
         {/* <Pricing /> */}
       </main>
@@ -15,3 +16,4 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+

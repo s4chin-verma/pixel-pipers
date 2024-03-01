@@ -1,13 +1,13 @@
 import Home from './Home';
 import NotFound from './NotFound';
 import Login from './auth/Login';
-import Demo from './Demo';
+import Demo1 from './Demo-1';
 import Register from './auth/Register';
 import Payment from './Payment';
 import PaymentSuccess from './PaymentSuccess';
 import MlModel from './MlModels';
 import MlModelBuy from './MlModelBuy';
-import Demo1 from './Demo-2';
+import Demo from './Demo';
 
 export {
   Home,

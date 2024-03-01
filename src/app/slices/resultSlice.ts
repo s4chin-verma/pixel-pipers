@@ -1,16 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { sendImageToServer } from '../actions/fileAction';
-import { FileState } from '@/lib/types';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { sendImageToServer } from '../actions/resultAction';
+import { ResultState } from '@/lib/types';
 
-const initialState: FileState = {
+const initialState: ResultState = {
   loading: false,
   count: null,
-  image_url: null,
+  previewImage: null,
+  coordinates: null,
   error: null,
 };
 
-const fileSlice = createSlice({
-  name: 'file',
+const resultSlice = createSlice({
+  name: 'result',
   initialState,
   reducers: {
     setLoading: state => {
@@ -18,6 +19,9 @@ const fileSlice = createSlice({
     },
     resetLoading: state => {
       state.loading = false;
+    },
+    setPreviewImage: (state, action: PayloadAction<string | null>) => {
+      state.previewImage = action.payload;
     },
   },
   extraReducers: builder => {
@@ -28,7 +32,7 @@ const fileSlice = createSlice({
       .addCase(sendImageToServer.fulfilled, (state, action) => {
         state.loading = false;
         state.count = action.payload.count;
-        state.image_url = action.payload.image_url;
+        state.coordinates = action.payload.coordinates;
         state.error = null;
       })
       .addCase(sendImageToServer.rejected, (state, { payload }) => {
@@ -38,5 +42,5 @@ const fileSlice = createSlice({
   },
 });
 
-export const { setLoading } = fileSlice.actions;
-export default fileSlice.reducer;
+export const { setLoading, resetLoading, setPreviewImage } = resultSlice.actions;
+export default resultSlice.reducer;

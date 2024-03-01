@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { showToast } from '@/lib/validators';
 
 export const sendImageToServer = createAsyncThunk(
-  'file/sendImage',
+  'result/sendImage',
   async ({ previewImage, confidence_threshold }: any, { rejectWithValue }) => {
     if (!previewImage) {
       showToast('No image selected', 'warning');
@@ -17,13 +17,13 @@ export const sendImageToServer = createAsyncThunk(
 
     try {
       showToast('Request Send to Server', 'info');
-      const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/frontend`, formData, {
+      const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/coordinates`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${import.meta.env.VITE_ML_TOKEN}`,
         },
       });
-
+      console.log(response)
       if (response.status === 200) showToast('Object Counted Successful', 'success');
       return response.data;
     } catch (error) {

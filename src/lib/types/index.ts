@@ -39,10 +39,11 @@ export interface AuthState {
   success: boolean;
 }
 
-export interface FileState {
+export interface ResultState {
   loading: boolean;
+  previewImage: string | null;
   count: string | null;
-  image_url: string | null;
+  coordinates: [] | null;
   error: string | null;
 }
 export interface DemoState {

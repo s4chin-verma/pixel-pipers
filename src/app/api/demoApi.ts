@@ -17,6 +17,7 @@ export const demoApi = createApi({
   endpoints: builder => ({
     demoApi: builder.mutation<DemoResponse, DemoRequest>({
       query: body => ({
+        // url: '/cloudinary',
         url: '/cloudinary',
         method: 'POST',
         body,
