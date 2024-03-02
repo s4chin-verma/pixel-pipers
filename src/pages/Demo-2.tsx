@@ -15,10 +15,10 @@ const Demo: React.FC = () => {
   const infoDivRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
   const windowWidth = useWindowWidth();
-  const [toggleState, setToggleState] = useState(0);
+  const [toggleState, setToggleState] = useState(1);
 
   const handleToggle = () => {
-    setToggleState(prevState => (prevState === 0 ? 1 : 0));
+    setToggleState(prevState => (prevState === 1 ? 0 : 1));
   };
   useEffect(() => {
     if (!loading && infoDivRef.current) {
@@ -193,12 +193,12 @@ const Demo: React.FC = () => {
                     toggleState === 0 ? 'translate-x-0' : 'translate-x-full '
                   }`}></div>
               </button>
-              <div className='w-10'>{toggleState === 0 ? <p>dot</p> : <p>number</p>}</div>
+              <div className="w-10">{toggleState === 0 ? <p>dot</p> : <p>number</p>}</div>
             </div>
           </div>
         </div>
         {loading && <Loader />}
-        {image_url && (
+        {!loading && image_url && (
           <ResultImage
             image_url={image_url}
             infoDivRef={infoDivRef}
