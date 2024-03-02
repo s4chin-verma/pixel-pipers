@@ -15,6 +15,7 @@ const Demo: React.FC = () => {
   const infoDivRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
   const windowWidth = useWindowWidth();
+  const [toggleState, setToggleState] = useState(1);
 
   useEffect(() => {
     if (!loading && infoDivRef.current) {
@@ -123,6 +124,9 @@ const Demo: React.FC = () => {
     event.dataTransfer.dropEffect = 'copy';
   };
 
+  const handleToggle = () => {
+    setToggleState(prevState => (prevState === 1 ? 0 : 1));
+  };
   return (
     <section className="bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col justify-center items-center">
@@ -168,6 +172,20 @@ const Demo: React.FC = () => {
               <DemoBtn onClick={handleSendImageToServer} children="Send" className="w-32 h-10" />
             </div>
             <Counter value={value} setValue={setValue} />
+            <div className="flex gap-7 items-center justify-center">
+              <button
+                type="button"
+                className={`rounded-full w-12 h-6 flex items-center justify-${
+                  toggleState === 0 ? 'start bg-gray-400' : 'end bg-cyan-300'
+                } bg- p-1`}
+                onClick={handleToggle}>
+                <div
+                  className={`w-5 h-5 rounded-full bg-white shadow-md transform transition-transform duration-300 ${
+                    toggleState === 0 ? 'translate-x-0' : 'translate-x-full '
+                  }`}></div>
+              </button>
+              <div className="w-10">{toggleState === 0 ? <p>dot</p> : <p>number</p>}</div>
+            </div>
           </div>
         </div>
         {loading && <Loader />}
