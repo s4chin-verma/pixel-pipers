@@ -9,6 +9,7 @@ import { useDemoApiMutation } from '@/app/api/demoApi';
 import { showToast } from '@/lib/validators';
 import { setResultImageUrl } from '@/app/slices/demoSlice';
 
+
 const Demo: React.FC = () => {
   const [value, setValue] = useState<number>(0.6);
   const [publicId, setPublicId] = useState<string>('');
@@ -90,6 +91,7 @@ const Demo: React.FC = () => {
               sendRequest={sendRequest}
             />
             <Counter value={value} setValue={setValue} />
+          
           </div>
         </div>
         {isLoading && <Loader />}
