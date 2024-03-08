@@ -1,5 +1,5 @@
 import { Footer } from '@/container';
-import Demo2 from './Demo-2';
+import Demo2 from './Demo';
 
 const Home: React.FC = () => {
   return (

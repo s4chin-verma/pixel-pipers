@@ -8,7 +8,6 @@ import {
   PaymentSuccess,
   MlModel,
   MlModelBuy,
-  Demo1
 } from '@/pages';
 
 import { Header } from './container';
@@ -30,7 +29,6 @@ export const router = createBrowserRouter([
       { path: '/', element: <Home /> },
       { path: '/login/', element: <Login /> },
       { path: '/register/', element: <Register /> },
-      { path: '/demo/', element: <Demo1 /> },
       { path: '/payment/', element: <Payment /> },
       { path: '/models/', element: <MlModel /> },
       { path: '/models/buy/', element: <MlModelBuy /> },

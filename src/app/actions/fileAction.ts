@@ -4,7 +4,7 @@ import { showToast } from '@/lib/validators';
 
 export const sendImageToServer = createAsyncThunk(
   'file/sendImage',
-  async ({ previewImage, confidence_threshold, toggleState }: any, { rejectWithValue }) => {
+  async ({ previewImage, confidence_threshold, toggleState, color }: any, { rejectWithValue }) => {
     if (!previewImage) {
       showToast('No image selected', 'warning');
       return rejectWithValue('No image selected');
@@ -15,6 +15,7 @@ export const sendImageToServer = createAsyncThunk(
     formData.append('uploadImage', blob);
     formData.append('confidence_threshold', confidence_threshold);
     formData.append('key', toggleState);
+    formData.append('color', color);
 
     try {
       showToast('Request Send to Server', 'info');
